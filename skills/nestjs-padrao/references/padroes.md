@@ -127,7 +127,7 @@ async approve(id: string): Promise<Merchant> {
 }
 ```
 
-- As exceções do Nest são lançadas direto, sem classes próprias nem filtro.
+- As exceções do Nest são lançadas direto, sem classes próprias nem filtro. Classe própria (`extends Error`, com `this.name = X.name`) só para erro de infra que atravessa camadas, lançada por repository ou gateway.
 - No `catch`, os erros HTTP que **aquela ação** lança de propósito são relançados, listados um a um com `instanceof`. O resto vira 500, com o erro original no log.
 - Status usados:
 
@@ -217,15 +217,15 @@ export default tseslint.config(
 - Conventional Commits em inglês, com a tarefa no escopo: `feat(REC-48): payouts table, merchant replica and payout model in repasse`.
 - Uma branch por tarefa (`REC-48`), PR para `develop` e depois PR de `develop` para `main`.
 
-## Decisões pendentes
+## Decisões sobre as divergências (2026-11-05)
 
-Divergências encontradas no repositório de origem. Ao lado de cada uma, a proposta para o padrão.
+O repositório de origem tinha divergências entre os serviços. Ficou decidido assim:
 
 1. **Tratamento de erro.** `lojista` e `ledger` lançam as exceções do Nest direto (decisão do REC-41). `pagamentos` usa classes próprias (`extends Error`, com `this.name = X.name`) e um `@Catch` filter para traduzir em HTTP.
-   **Proposta:** o primeiro estilo é o padrão. Classes próprias só para erro de infra que atravessa camadas (repository e gateway).
-2. **Os tsconfigs não são iguais.** O de `liquidacao` não tem `strictPropertyInitialization: false` e o de `repasse` não tem `types`.
-   **Proposta:** o modelo é o tsconfig de `pagamentos`.
+   **Decidido:** o primeiro estilo é o padrão. Classes próprias só para erro de infra que atravessa camadas (repository e gateway).
+2. **Os tsconfigs não eram iguais.** O de `liquidacao` não tinha `strictPropertyInitialization: false` e o de `repasse` não tinha `types`.
+   **Decidido:** o modelo é o tsconfig de `pagamentos` (`templates/tsconfig.json`).
 3. **Mensagem fora do molde:** `'charge not found!'` em `pagamentos`.
-   **Proposta:** seguir sempre `<Entidade> ${id} not found`.
-4. **Sem regra de ordem de imports nem de máximo de linhas.**
-   **Proposta:** continuar sem regra, a menos que se decida outra coisa (ex.: `max-lines: 300`).
+   **Decidido:** seguir sempre `<Entidade> ${id} not found`.
+4. **Ordem de imports e máximo de linhas.**
+   **Decidido:** sem regra por enquanto. Se mudar, a regra entra no `templates/eslint.config.mjs` (ex.: `max-lines: 300`).
