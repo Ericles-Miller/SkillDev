@@ -11,14 +11,18 @@ claude-config/
 ├── CLAUDE.md                      → ~/.claude/CLAUDE.md (carregado em toda sessão)
 ├── install.sh                     cria os symlinks em ~/.claude
 └── skills/
-    └── nestjs-padrao/             → ~/.claude/skills/nestjs-padrao
-        ├── SKILL.md               quando usar e checklist do padrão
-        ├── references/padroes.md  o guia completo, com exemplos
-        └── templates/             configs e arquivos iniciais de um projeto Nest
+    ├── nestjs-padrao/             → ~/.claude/skills/nestjs-padrao
+    │   ├── SKILL.md               quando usar e checklist do padrão
+    │   ├── references/padroes.md  o guia completo, com exemplos
+    │   └── templates/             configs e arquivos iniciais de um projeto Nest
+    └── jira-task/                 → ~/.claude/skills/jira-task
+        ├── SKILL.md               passo a passo, prioridades e checklist do card
+        └── references/modelos.md  modelos de descrição (tarefa, bug, tela, decisão, epic)
 ```
 
 - **`CLAUDE.md`**: regras curtas que valem sempre, em qualquer projeto.
 - **Skill `nestjs-padrao`**: o Claude carrega quando a tarefa é NestJS/TypeScript. Também dá para chamar direto com `/nestjs-padrao`.
+- **Skill `jira-task`**: o Claude carrega para abrir task, bug ou epic no Jira. Também dá para chamar direto com `/jira-task`. Toda decisão e todo débito técnico são definidos antes de criar o card.
 
 ## Instalar
 

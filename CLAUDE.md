@@ -19,6 +19,11 @@ Valem em todo projeto. Se o CLAUDE.md do projeto disser outra coisa, vale o do p
 
 - Rode o lint, o build e os testes do projeto e diga o resultado.
 
+## Jira
+
+- Para abrir task, bug ou epic, siga a skill `jira-task`.
+- Nenhuma task é aberta com decisão ou débito técnico em aberto: tudo é definido comigo antes de criar o card.
+
 ## Git
 
 - Conventional Commits em inglês, com a tarefa no escopo quando houver: `feat(REC-48): ...`.
