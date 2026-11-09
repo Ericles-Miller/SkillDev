@@ -75,7 +75,7 @@ Formato da MS-99 e da PC-70.
 - [ ] Lint, build e testes passando.
 ```
 
-Se a causa ainda não é conhecida, a task é de investigação (`<Área>: investigar <sintoma>`). O bug de correção é aberto depois, com a causa.
+Se a causa ainda não é conhecida, investigue antes seguindo a skill `systematic-debugging`. Se a investigação for longa, ela vira uma task própria (`<Área>: investigar <sintoma>`), e o bug de correção é aberto depois, com a causa.
 
 ## Tela (frontend)
 

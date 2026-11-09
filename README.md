@@ -9,15 +9,20 @@ O `~/.claude` aponta para cá por symlink. Assim, toda mudança nas regras passa
 ```
 claude-config/
 ├── CLAUDE.md                      → ~/.claude/CLAUDE.md (carregado em toda sessão)
-├── install.sh                     cria os symlinks em ~/.claude
+├── install.sh                     cria os symlinks, instala os plugins e o language server
+├── plugins.txt                    plugins do Claude Code instalados pelo install.sh
+├── hookify/                       → ~/.claude/hookify (regras a copiar para o .claude/ de cada projeto)
 └── skills/
     ├── nestjs-padrao/             → ~/.claude/skills/nestjs-padrao
     │   ├── SKILL.md               quando usar e checklist do padrão
     │   ├── references/padroes.md  o guia completo, com exemplos
     │   └── templates/             configs e arquivos iniciais de um projeto Nest
-    └── jira-task/                 → ~/.claude/skills/jira-task
-        ├── SKILL.md               passo a passo, prioridades e checklist do card
-        └── references/modelos.md  modelos de descrição (tarefa, bug, tela, decisão, epic)
+    ├── jira-task/                 → ~/.claude/skills/jira-task
+    │   ├── SKILL.md               passo a passo, prioridades e checklist do card
+    │   └── references/modelos.md  modelos de descrição (tarefa, bug, tela, decisão, epic)
+    ├── test-driven-development/   do Superpowers: teste antes do código
+    ├── systematic-debugging/      do Superpowers: causa raiz antes da correção
+    └── verification-before-completion/  do Superpowers: prova antes de dizer que terminou
 ```
 
 - **`CLAUDE.md`**: regras curtas que valem sempre, em qualquer projeto.
@@ -30,7 +35,34 @@ claude-config/
 ./install.sh
 ```
 
-O script cria os symlinks. Se já existir um arquivo de verdade no lugar, ele é movido para `~/.claude/backup-claude-config-<data>/` antes. Pode rodar de novo sem problema.
+O script faz quatro coisas:
+- Cria os symlinks. Se já existir um arquivo de verdade no lugar, ele é movido para `~/.claude/backup-claude-config-<data>/` antes.
+- Instala os plugins de `plugins.txt`: `typescript-lsp` (o Claude passa a ver os erros de tipo e a navegar pelo código TypeScript) e `hookify` (transforma regra em bloqueio).
+- Instala com yarn o `typescript-language-server`, que o `typescript-lsp` usa. A versão fica fixa em 5.3.0, porque a 6.x pede Node 22.22 ou mais novo.
+- Pode rodar de novo sem problema.
+
+## Hookify
+
+As regras do hookify valem por projeto: o plugin só lê os arquivos `.claude/hookify.*.local.md` do projeto aberto. Para ligar as regras num projeto que já existe:
+
+```bash
+mkdir -p .claude && cp ~/.claude/hookify/*.local.md .claude/
+```
+
+Projeto novo criado pela skill `nestjs-padrao` já recebe as regras.
+
+| Regra | O que faz |
+|---|---|
+| `block-npm` | Barra `npm` como comando e mostra o equivalente em yarn. Deixa passar `npx`, `pnpm` e a palavra "npm" dentro de um texto, como uma mensagem de commit. |
+
+## Skills de terceiros
+
+`test-driven-development`, `systematic-debugging` e `verification-before-completion` são cópias do [obra/superpowers](https://github.com/obra/superpowers) (commit `22f0b46`, licença MIT, que vai junto em cada pasta). O texto original foi mantido em inglês, para facilitar a comparação com versões novas. Os únicos ajustes:
+- `npm` virou `yarn`.
+- `*.test.ts` virou `*.spec.ts`.
+- As referências `superpowers:<skill>` perderam o prefixo.
+
+Para atualizar, compare com a versão nova do Superpowers e refaça esses três ajustes.
 
 ## Mudar uma regra
 

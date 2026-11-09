@@ -20,6 +20,7 @@ Se o projeto já segue um padrão diferente deste, siga o do projeto e aponte a 
    - `gitignore` vira `.gitignore`. No template ele não tem o ponto, para não valer dentro do repositório da skill.
    - `src/`: `main.ts`, `app.module.ts`, `health.controller.ts`, `health.controller.spec.ts`.
    - `test/`: `app.e2e-spec.ts`, `jest-e2e.json`.
+   - `.claude/`: as regras do hookify de `~/.claude/hookify/` (a `block-npm` barra o `npm`).
 4. No `main.ts`, troque `<project>`, `<service>` e `<what the service does>`. Ajuste a porta padrão no `main.ts` e no `.env.example`.
 5. `yarn add @nestjs/config@^4 @nestjs/swagger class-validator class-transformer`
    - Com Postgres: `yarn add @nestjs/typeorm@^11 typeorm pg`.
@@ -62,6 +63,7 @@ Os geradores `nest g` seguem os nomes do Nest (`dto/`, `create-x.dto.ts`), não 
 - Mensagens: `<Entidade> ${id} not found`, `Cannot <ação> <entidade> ${id}: <motivo>`.
 
 **Teste**
+- Teste antes do código, visto falhando primeiro (skill `test-driven-development`).
 - `*.spec.ts` unitário ao lado do arquivo. `*.test.spec.ts` integração com a infra real. `test/*.e2e-spec.ts` e2e.
 - Fake em memória com o mesmo contrato, em vez de `jest.mock`.
 
