@@ -224,12 +224,6 @@ Arquivo: <link do Figma>
 Ajustes pedidos na aprovação: <lista, ou "nenhum">
 ```
 
-## 7. Fechamento da tela
+## 7. Implementação e fechamento da tela
 
-No comentário de fechamento da skill `executar-task`, acrescente:
-
-```markdown
-**Comparação com o desenho:** <estados comparados, em cada variante e tema>
-**Divergências do desenho:** <o que mudou e por quê, ou "nenhuma">
-**Novo no Design System:** <token ou componente criado com aprovação, ou "nada">
-```
+Ficam na skill `figma-para-codigo`: o checklist por tela, o mapa de tokens e o bloco de fechamento, nas seções 4 a 6 do `references/modelos.md` dela.

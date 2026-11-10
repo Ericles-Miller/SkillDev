@@ -1,6 +1,6 @@
 ---
 name: telas-figma
-description: Método para especificar, desenhar e implementar telas com o Figma First Draft, o mesmo do projeto calhas. Cobre o Design System Base, o mapa de fluxos tirado do backend real, a Ficha de Tela no Jira com os campos espelhando o DTO, o prompt pronto para o First Draft (mobile e web), a aprovação do desenho e a implementação lendo o Figma. Use para planejar as telas de um módulo, abrir a task de uma tela, escrever o prompt do Figma ou implementar uma tela a partir de um desenho.
+description: Método para especificar, desenhar e implementar telas com o Figma First Draft, o mesmo do projeto calhas. Cobre o Design System Base, o mapa de fluxos tirado do backend real, a Ficha de Tela no Jira com os campos espelhando o DTO, o prompt pronto para o First Draft (mobile e web), a aprovação do desenho e a implementação lendo o Figma. Use quando o desenho ainda não existe: para planejar as telas de um módulo, abrir a task de uma tela ou escrever o prompt do Figma. Se o desenho já existe (designer, protótipo), use a skill figma-para-codigo.
 ---
 
 # Telas com Figma First Draft
@@ -43,15 +43,13 @@ Os modelos de cada documento, com exemplos reais, estão em [references/modelos.
 4. **Desenho.** Quem opera o Figma cola o prompt no First Draft, revisa com a checklist da Ficha e ajusta à mão.
    - Um fluxo com muitas etapas ou condições difíceis de descrever pode ser validado antes no Figma Make. A versão oficial sai do First Draft, porque o Make tende a ignorar os componentes do design system.
 5. **Aprovação.** O usuário aprova, e a task recebe um comentário com o link do arquivo e o `node-id` de cada quadro aprovado. **Desenho sem aprovação registrada não vira código.**
-6. **Implementação**, seguindo a skill `executar-task`:
-   - Leia os quadros aprovados pelo Figma MCP. Carregue a skill `figma:figma-design-to-code` antes de chamar o `get_design_context`.
-   - Sem o conector, peça o link e as imagens exportadas de cada quadro, e pergunte as medidas que ficarem em dúvida.
-   - O Figma é a intenção; o Design System é a implementação. Cor, fonte, espaço e raio saem dos tokens e dos componentes do projeto, nunca copiados do Figma.
-   - Cor ou componente que não existe no Design System: pergunte. Se for aprovado, entra primeiro no Design System (código e doc) e só depois na tela.
-   - Consuma exatamente o endpoint e o DTO da Ficha.
-7. **Verificação:** lint, build e a tela rodando contra o backend real, em cada variante e tema.
-   - Faça a comparação visual: o screenshot de cada estado contra o quadro do mesmo estado.
-   - Divergência do desenho só se ficar registrada na task, com o motivo.
+6. **Implementação e verificação:** siga a skill `figma-para-codigo`, seção "Por tela", junto com a `executar-task`. Ela cobre:
+   - a leitura dos quadros aprovados pelo Figma MCP;
+   - o uso dos tokens e componentes do projeto, nunca de valores copiados do Figma;
+   - as regras de web e de Flutter;
+   - a comparação visual com os quadros.
+
+   O endpoint e o DTO consumidos são os da Ficha.
 
 ## Regras
 

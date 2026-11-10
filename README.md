@@ -28,6 +28,8 @@ claude-config/
     │   └── templates/
     ├── telas-figma/               método de telas do calhas: Design System, Ficha, prompt do First Draft
     │   └── references/modelos.md  modelos dos docs, da Ficha, do prompt e da aprovação
+    ├── figma-para-codigo/         implementa a partir do desenho do Figma, em web (Next) e mobile (Flutter)
+    │   └── references/modelos.md  inventário, confronto, plano, mapa de tokens, checklist e conector
     ├── test-driven-development/   do Superpowers: teste antes do código
     ├── systematic-debugging/      do Superpowers: causa raiz antes da correção
     └── verification-before-completion/  do Superpowers: prova antes de dizer que terminou
@@ -44,7 +46,11 @@ claude-config/
   - Por tela: a Ficha no Jira, com os campos espelhando o DTO, e o prompt pronto para o Figma First Draft.
   - Depois do desenho: a aprovação com o `node-id` e a implementação lendo o Figma, com comparação visual.
 
-O ciclo de uma task: `iniciar-projeto` (uma vez por projeto) → `jira-task` (abre a task já decidida) → `executar-task` (faz e fecha). Tela passa também pela `telas-figma`, entre a abertura e o código.
+- **Skill `figma-para-codigo`**: o caminho inverso, do desenho pronto para o código, em web (Next.js) e mobile (Flutter).
+  - Uma vez por arquivo do Figma: inventário, confronto com os docs, o backend e o Design System, e um plano de front e back.
+  - Por tela: implementação usando os tokens e componentes do projeto, com dado real e todos os estados, e comparação visual com os quadros.
+
+O ciclo de uma task: `iniciar-projeto` (uma vez por projeto) → `jira-task` (abre a task já decidida) → `executar-task` (faz e fecha). Tela passa também pela `telas-figma` (do texto ao desenho) e pela `figma-para-codigo` (do desenho ao código).
 
 ## Instalar
 
