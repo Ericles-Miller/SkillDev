@@ -26,6 +26,8 @@ claude-config/
     ├── executar-task/             roteiro de uma task: branch, Jira, teste, verificação, commit
     ├── iniciar-projeto/           CLAUDE.md do projeto, log de decisões, pendências e .claude/
     │   └── templates/
+    ├── telas-figma/               método de telas do calhas: Design System, Ficha, prompt do First Draft
+    │   └── references/modelos.md  modelos dos docs, da Ficha, do prompt e da aprovação
     ├── test-driven-development/   do Superpowers: teste antes do código
     ├── systematic-debugging/      do Superpowers: causa raiz antes da correção
     └── verification-before-completion/  do Superpowers: prova antes de dizer que terminou
@@ -37,7 +39,12 @@ claude-config/
 - **Skill `executar-task`**: o roteiro de uma task, do começo ao fim. Confere a branch, lê a task e os docs, move no Jira, implementa com teste antes, verifica, comenta na task e entrega a mensagem de commit.
 - **Skill `iniciar-projeto`**: prepara um projeto, novo ou existente. Pergunta as regras (Jira, quem commita, branches, testes, cuidados) e cria o `CLAUDE.md` do projeto, o log de decisões, as pendências técnicas e o `.claude/`.
 
-O ciclo de uma task: `iniciar-projeto` (uma vez por projeto) → `jira-task` (abre a task já decidida) → `executar-task` (faz e fecha).
+- **Skill `telas-figma`**: o método de telas do projeto calhas.
+  - Uma vez por projeto: Design System Base, com o cabeçalho fixo do prompt, e os fluxos tirados do backend real.
+  - Por tela: a Ficha no Jira, com os campos espelhando o DTO, e o prompt pronto para o Figma First Draft.
+  - Depois do desenho: a aprovação com o `node-id` e a implementação lendo o Figma, com comparação visual.
+
+O ciclo de uma task: `iniciar-projeto` (uma vez por projeto) → `jira-task` (abre a task já decidida) → `executar-task` (faz e fecha). Tela passa também pela `telas-figma`, entre a abertura e o código.
 
 ## Instalar
 

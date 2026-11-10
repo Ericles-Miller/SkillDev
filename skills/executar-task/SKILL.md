@@ -24,6 +24,7 @@ A task já nasce com as decisões tomadas (skill `jira-task`). Aqui é seguir o 
 - Faça o que está no escopo e nos critérios de aceite: nem mais, nem menos.
 - Achou algo fora do escopo (bug, débito, melhoria)? Anote para o fim; não resolva junto.
 - Código no padrão (skill `nestjs-padrao` no backend), com o teste antes (skill `test-driven-development`). Bug no caminho: skill `systematic-debugging`.
+- Tela: só a partir do desenho aprovado, com o `node-id` registrado na task. Siga os passos 6 e 7 da skill `telas-figma`.
 - Atualize o que a mudança afeta: README, `.env.example`, docs de arquitetura, `docs/DECISOES.md`.
 
 ## Para fechar

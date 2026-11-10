@@ -16,6 +16,7 @@ Valem em todo projeto. Se o CLAUDE.md do projeto disser outra coisa, vale o do p
 - Se o projeto existente usa um padrão diferente, siga o do projeto e me avise da diferença, em vez de reescrever.
 - Feature ou correção: o teste vem antes do código (skill `test-driven-development`).
 - Bug, teste falhando ou comportamento estranho: ache a causa raiz antes de propor a correção (skill `systematic-debugging`).
+- Tela de frontend: siga a skill `telas-figma`. A Ficha e o prompt do Figma vêm antes, e o desenho aprovado antes do código.
 
 ## Antes de dizer que terminou
 

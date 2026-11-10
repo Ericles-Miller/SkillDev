@@ -74,6 +74,7 @@ A Epic também recebe prioridade, pela importância do bloco inteiro.
   - A área é `Backend`, `Frontend`, `Infra (Terraform)`, `Frontend (Figma)` ou `Backend + Frontend`.
   - Bug: `<Área>: fix — <o que estava errado>`.
   - Decisão: `Decisão: <tema>`.
+  - Tela: `Tela: <Nome> — Mobile + Web`, com a Ficha de Tela da skill `telas-figma`.
 - **Tipo:** `Tarefa`, `Bug`, `Epic` ou `Subtarefa` (os nomes do Jira em português).
 - **Labels** em minúsculas, com hífen: a área (`backend`, `frontend`, `infra`), o domínio (`auth`, `payments`) e a fase (`fase1`), quando houver. Use `blocked` se a task depende de terceiro.
 - **Epic:** toda task tem pai. Uma task de mais de ~3 dias vira várias tasks na mesma Epic (a MS-32 virou as MS-36 a MS-40).

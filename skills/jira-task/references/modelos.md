@@ -79,19 +79,13 @@ Se a causa ainda não é conhecida, investigue antes seguindo a skill `systemati
 
 ## Tela (frontend)
 
-Use o modelo de Tarefa e coloque uma Ficha de Tela por tela dentro do Escopo (formato da MS-61):
+A task de tela usa a Ficha de Tela da skill `telas-figma` (veja o `references/modelos.md` dela). A Ficha traz:
+- O título `Tela: <Nome> — Mobile + Web`.
+- Os campos espelhando o DTO do backend.
+- Os textos decididos.
+- Os prompts do Figma First Draft e a checklist de colagem.
 
-```markdown
-**Ficha de Tela: <nome>** (`<rota>`, <pública | autenticada>)
-
-* Endpoint(s): `<VERBO /rota>` `{ <corpo> }` → <status>
-* Campos/dados: <lista>
-* Entra de → vai para: <origem> → <destino em cada caso>
-* Regra-chave: <as 1 a 3 regras que mais importam, com o tratamento de cada erro>
-* Reusa: <componentes do Design System>
-```
-
-Os textos da tela também são decisão. Defina os textos principais (título, botão, mensagens de erro e de vazio) antes de abrir a task.
+As regras desta skill continuam valendo: prioridade com motivo, e decisões e débitos fechados antes de abrir a task.
 
 ## Decisão
 
