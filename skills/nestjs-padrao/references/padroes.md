@@ -21,7 +21,9 @@ src/
 ├── main.ts · app.module.ts · health.controller.ts
 ├── aws/            aws.module.ts + <svc>/<svc>.config.ts + aws-<svc>.service.ts
 ├── database/       database.module.ts, data-source.ts, migrations/, *.definition.ts
-├── common/         correlation/, dtos/ compartilhados
+├── auth/           auth.module.ts, token.service.ts, guards/, decorators/, enums/, interfaces/
+├── common/         correlation/, dtos/ compartilhados (paginação)
+├── config/         env-reader.ts e utilitários de configuração
 ├── utils/validators/
 ├── scripts/        criação de tabela, ferramentas de linha de comando
 └── <feature>/
@@ -155,6 +157,53 @@ async approve(id: string): Promise<Merchant> {
 }
 ```
 
+## Autenticação e autorização
+
+O modelo é o backend da usina (MS-36 a MS-40), feito depois das auditorias do calhas, que acharam rotas sem guard e acesso a recurso de outro usuário (PC-70, PC-73, PC-77). Os arquivos prontos, com testes, estão em `templates/opcional/src/auth/`.
+
+- **Guard global que nega por padrão.** O `JwtAuthGuard` é registrado como `APP_GUARD`: rota nova nasce protegida, e só `@Public()` a libera (health, login, refresh, links de e-mail). No calhas o guard era por rota, e um controller inteiro ficou público (PC-73).
+- **Sem passport.** O guard lê o `Bearer`, valida com o `TokenService` e põe `{ id, email, role }` em `request.user`. O controller recebe com `@CurrentUser()`.
+- **Papéis:** `@RequireRoles(ERole.ADMIN)` com o `RolesGuard`, o segundo `APP_GUARD`. Sem o decorator, qualquer usuário autenticado passa; com papel errado, 403. O papel vai dentro do access token, então uma troca de papel só vale no próximo token (até 15 min).
+- **Dono do recurso:** filtre pelo dono na própria consulta (`where: { id, userId }`) e responda 404 quando não achar. É 404 e não 403 para não revelar que o recurso existe. O id do dono vem sempre do `@CurrentUser()`, nunca do body ou da query.
+- **Tokens:**
+  - Access token de 15 min e refresh de 7 dias, com segredos diferentes, de 32 caracteres ou mais, conferidos na subida do app.
+  - O refresh leva um `jti` aleatório, e o banco guarda só o hash SHA-256 dele. Não bcrypt: ele só olha os primeiros 72 bytes, e o começo de dois JWTs é quase igual.
+  - O refresh gira a cada uso: o hash novo só é gravado se o antigo ainda for o atual. Se não for, é reuso de um token já trocado: apague o hash e recuse, tratando como vazamento.
+  - Logout apaga o hash do refresh. Com token inválido, responde do mesmo jeito, sem erro.
+  - Link de e-mail (confirmar conta, redefinir senha): token opaco de 32 bytes aleatórios, de uso único e com validade. Só o hash vai para o banco.
+- **Login:**
+  - Senha com `bcryptjs`.
+  - E-mail inexistente também passa pelo `compare` (com um hash falso), para o tempo de resposta não denunciar quem tem cadastro.
+  - Credencial errada → 401 `Invalid credentials`, sem dizer qual dos dois errou. Conta não confirmada → 403, só para quem acertou a senha.
+  - "Esqueci a senha" responde igual, exista a conta ou não.
+- `@Exclude({ toPlainOnly: true })` em senha e hashes. O `ClassSerializerInterceptor` global, que faz o `@Exclude` funcionar, já está no template do `app.module.ts`.
+- Rota pública sensível (esqueci a senha, reenviar confirmação) tem limite por IP com `@nestjs/throttler`, aplicado com `@UseGuards` só nela. Atrás de um balanceador, ligue o `trust proxy`, senão todos os clientes dividem o IP do balanceador.
+- Swagger: `.addBearerAuth()` no `main.ts` e `@ApiBearerAuth()` nos controllers protegidos.
+
+## Paginação e filtros
+
+Os arquivos prontos estão em `templates/opcional/src/common/`.
+
+- `PaginationRequestDto`: `page` a partir de 1 e `limit` de 1 a 100, com padrão 10. O teto evita que uma listagem carregue a tabela inteira (o do calhas não tinha).
+- O filtro é `List<Entidade>RequestDto extends PaginationRequestDto`, recebido com `@Query()`. Todo campo é opcional, com class-validator e `@ApiPropertyOptional`.
+- A resposta é `PaginatedResponseDto<T>` (`data`, `total`, `page`, `limit`, `totalPages`), montada com `PaginatedResponseDto.of(data, total, pagination)`. Para o Swagger, cada listagem declara `<Entidade>PageResponseDto` estendendo a classe e redeclarando `data` com `@ApiProperty({ type: [<Entidade>ResponseDto] })`.
+- A consulta usa `findAndCount` com `skip: (page - 1) * limit` e `take: limit`, e sempre com ordem explícita (`order: { createdAt: 'DESC' }`). Sem ordem, a mesma página pode mudar entre duas chamadas.
+
+## Variáveis de ambiente
+
+- Toda variável nova entra no `.env.example` com um comentário: para que serve, o formato e se é obrigatória.
+- Obrigatória que falta derruba o app na subida, com mensagem clara, em vez de falhar no primeiro uso. Use o `createEnvReader(configService)` de `templates/opcional/src/config/env-reader.ts`: `env.required('MAIL_HOST', 'to send emails')`. Vazio ou só com espaços conta como ausente.
+- Segredo nunca tem valor padrão no código.
+- Valor do `.env` nunca aparece em log, resposta, comentário de Jira ou doc: só o nome.
+
+## Infra local
+
+`templates/opcional/docker-compose.yml` traz:
+- Postgres com healthcheck: `docker compose up -d db`.
+- LocalStack no profile `aws` e Mailpit (SMTP falso, caixa de entrada em `localhost:8025`) no profile `mail`.
+
+As portas ficam presas ao `127.0.0.1`.
+
 ## Estilo de código
 
 - **Prettier:** `singleQuote`, `trailingComma: "all"`, `printWidth: 120` (até 120 caracteres por linha). Indentação de 2 espaços e ponto e vírgula (os padrões do Prettier).
@@ -229,3 +278,16 @@ O repositório de origem tinha divergências entre os serviços. Ficou decidido 
    **Decidido:** seguir sempre `<Entidade> ${id} not found`.
 4. **Ordem de imports e máximo de linhas.**
    **Decidido:** sem regra por enquanto. Se mudar, a regra entra no `templates/eslint.config.mjs` (ex.: `max-lines: 300`).
+
+## Decisões sobre auth, paginação e env (2026-11-09)
+
+A usina e o calhas resolviam estas partes de jeitos diferentes. São recomendações aplicadas a pedido do Ericles; confirmar na revisão.
+
+5. **Autenticação.** O calhas usa passport e um guard por rota; a usina usa um guard global que nega por padrão, sem passport.
+   **Recomendado:** o da usina. O guard por rota deixou um controller inteiro público no calhas (PC-73).
+6. **Dono do recurso.** O calhas usa um guard que compara o `companyId` da query com o do usuário; a usina filtra pelo dono na consulta e responde 404.
+   **Recomendado:** o da usina. O id na query é fácil de esquecer ou de trocar (PC-77).
+7. **Paginação.** Só o calhas tinha.
+   **Recomendado:** a do calhas, com teto de 100 itens e os nomes deste padrão (`PaginationRequestDto`).
+8. **Log de requisição com dados mascarados (MS-98).** A task foi aberta, mas nunca implementada.
+   **Fica de fora** até existir uma implementação validada.

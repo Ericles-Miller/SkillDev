@@ -25,6 +25,11 @@ Valem em todo projeto. Se o CLAUDE.md do projeto disser outra coisa, vale o do p
 
 - Para abrir task, bug ou epic, siga a skill `jira-task`.
 - Nenhuma task é aberta com decisão ou débito técnico em aberto: tudo é definido comigo antes de criar o card.
+- Para trabalhar numa task, do começo ao fim, siga a skill `executar-task`.
+
+## Projeto
+
+- Projeto novo, ou projeto sem `CLAUDE.md` próprio: proponha a skill `iniciar-projeto` antes de começar.
 
 ## Git
 

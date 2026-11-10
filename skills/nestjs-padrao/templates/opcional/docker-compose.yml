@@ -1,0 +1,42 @@
+# Infra local. No dia a dia: `docker compose up -d db`.
+# Os outros serviços sobem pelo profile: `docker compose --profile aws up -d` ou `--profile mail`.
+# As portas ficam presas ao 127.0.0.1 para nada de desenvolvimento ficar exposto na rede.
+services:
+  db:
+    image: postgres:15.3-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: <project>
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U app -d <project>']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # AWS falsa (S3, SQS, SNS, DynamoDB): liste em SERVICES só o que o projeto usa.
+  localstack:
+    profiles: ['aws']
+    image: localstack/localstack:4.14
+    restart: on-failure
+    environment:
+      SERVICES: <s3,sqs,sns,dynamodb>
+    ports:
+      - '127.0.0.1:4566:4566'
+
+  # SMTP falso: recebe os e-mails na porta 1025 e mostra numa caixa de entrada em http://localhost:8025.
+  mailpit:
+    profiles: ['mail']
+    image: axllent/mailpit:v1.21
+    restart: on-failure
+    ports:
+      - '127.0.0.1:1025:1025'
+      - '127.0.0.1:8025:8025'
+
+volumes:
+  pgdata:

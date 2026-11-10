@@ -11,15 +11,21 @@ claude-config/
 ├── CLAUDE.md                      → ~/.claude/CLAUDE.md (carregado em toda sessão)
 ├── install.sh                     cria os symlinks, instala os plugins e o language server
 ├── plugins.txt                    plugins do Claude Code instalados pelo install.sh
+├── scripts/verify-templates.sh    confere os templates do Nest num projeto descartável
 ├── hookify/                       → ~/.claude/hookify (regras a copiar para o .claude/ de cada projeto)
+│   └── test_rules.py              testa cada regra contra comandos e edições de exemplo
 └── skills/
     ├── nestjs-padrao/             → ~/.claude/skills/nestjs-padrao
     │   ├── SKILL.md               quando usar e checklist do padrão
     │   ├── references/padroes.md  o guia completo, com exemplos
     │   └── templates/             configs e arquivos iniciais de um projeto Nest
+    │       └── opcional/          auth com JWT, paginação, env e docker-compose, com testes
     ├── jira-task/                 → ~/.claude/skills/jira-task
     │   ├── SKILL.md               passo a passo, prioridades e checklist do card
     │   └── references/modelos.md  modelos de descrição (tarefa, bug, tela, decisão, epic)
+    ├── executar-task/             roteiro de uma task: branch, Jira, teste, verificação, commit
+    ├── iniciar-projeto/           CLAUDE.md do projeto, log de decisões, pendências e .claude/
+    │   └── templates/
     ├── test-driven-development/   do Superpowers: teste antes do código
     ├── systematic-debugging/      do Superpowers: causa raiz antes da correção
     └── verification-before-completion/  do Superpowers: prova antes de dizer que terminou
@@ -28,6 +34,10 @@ claude-config/
 - **`CLAUDE.md`**: regras curtas que valem sempre, em qualquer projeto.
 - **Skill `nestjs-padrao`**: o Claude carrega quando a tarefa é NestJS/TypeScript. Também dá para chamar direto com `/nestjs-padrao`.
 - **Skill `jira-task`**: o Claude carrega para abrir task, bug ou epic no Jira. Também dá para chamar direto com `/jira-task`. Toda decisão e todo débito técnico são definidos antes de criar o card.
+- **Skill `executar-task`**: o roteiro de uma task, do começo ao fim. Confere a branch, lê a task e os docs, move no Jira, implementa com teste antes, verifica, comenta na task e entrega a mensagem de commit.
+- **Skill `iniciar-projeto`**: prepara um projeto, novo ou existente. Pergunta as regras (Jira, quem commita, branches, testes, cuidados) e cria o `CLAUDE.md` do projeto, o log de decisões, as pendências técnicas e o `.claude/`.
+
+O ciclo de uma task: `iniciar-projeto` (uma vez por projeto) → `jira-task` (abre a task já decidida) → `executar-task` (faz e fecha).
 
 ## Instalar
 
@@ -49,11 +59,31 @@ As regras do hookify valem por projeto: o plugin só lê os arquivos `.claude/ho
 mkdir -p .claude && cp ~/.claude/hookify/*.local.md .claude/
 ```
 
-Projeto novo criado pela skill `nestjs-padrao` já recebe as regras.
+As skills `nestjs-padrao` (projeto novo) e `iniciar-projeto` já fazem essa cópia.
 
-| Regra | O que faz |
-|---|---|
-| `block-npm` | Barra `npm` como comando e mostra o equivalente em yarn. Deixa passar `npx`, `pnpm` e a palavra "npm" dentro de um texto, como uma mensagem de commit. |
+| Regra | Ação | O que faz |
+|---|---|---|
+| `block-npm` | bloqueia | Barra `npm` como comando e mostra o equivalente em yarn. Deixa passar `npx`, `pnpm` e a palavra "npm" dentro de um texto, como uma mensagem de commit. |
+| `block-push-protected` | bloqueia | Barra push para `main` ou `develop` e push com `--force`. Deixa passar o push da branch da task e o `--force-with-lease`. |
+| `block-git-commit` | bloqueia, mas vem desligada | Barra `git commit`, `push` e `merge`. A skill `iniciar-projeto` liga essa regra nos projetos em que a IA não commita. |
+| `warn-jest-mock` | avisa | `jest.mock` num `*.spec.ts`: o padrão é fake em memória. |
+| `warn-console-log` | avisa | `console.log` ou `console.debug` em `src/`, fora de teste e do `main.ts`: o padrão é o `Logger` da classe. |
+
+O hookify mostra o motivo do bloqueio para você, mas o Claude só vê "Blocked by hook". Por isso a regra também precisa estar escrita no `CLAUDE.md`.
+
+## Testar as mudanças
+
+Mudou um template do Nest ou uma regra do hookify? Rode o teste correspondente antes do commit:
+
+```bash
+./scripts/verify-templates.sh
+```
+
+```bash
+python3 -I hookify/test_rules.py
+```
+
+O primeiro cria um projeto Nest descartável com os templates (base e opcionais) e roda prettier, ESLint, build, testes unitários e e2e. O segundo roda cada regra do hookify contra comandos e edições de exemplo. Toda regra nova precisa de casos no `CASES` do script.
 
 ## Skills de terceiros
 
