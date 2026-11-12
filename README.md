@@ -11,8 +11,9 @@ claude-config/
 ├── CLAUDE.md                      → ~/.claude/CLAUDE.md (carregado em toda sessão)
 ├── install.sh                     cria os symlinks, instala os plugins e o language server
 ├── plugins.txt                    plugins do Claude Code instalados pelo install.sh
-├── agents/
-│   └── revisor-task.md            → ~/.claude/agents/ (revisor independente dos cards, só leitura)
+├── agents/                        → ~/.claude/agents/ (revisores independentes, só leitura)
+│   ├── revisor-task.md            fiscal dos cards do Jira
+│   └── revisor-codigo.md          fiscal do código: task, padrão, falhas, segurança, testes
 ├── scripts/verify-templates.sh    confere os templates do Nest num projeto descartável
 ├── hookify/                       → ~/.claude/hookify (regras a copiar para o .claude/ de cada projeto)
 │   └── test_rules.py              testa cada regra contra comandos e edições de exemplo
@@ -48,6 +49,14 @@ claude-config/
   - O que ele procura: decisão em aberto, regra de negócio quebrada (confere com os docs e o código), débito sem destino, critério que não dá para testar, dependência que não existe e task duplicada. Também faz um pré-mortem próprio.
   - O que ele devolve: BLOQUEIA, AJUSTAR e SUGESTÃO, cada item com a evidência.
   - Quando roda: a `jira-task` o chama sozinha antes de mostrar o rascunho. A skill também audita um card que já existe ou varre o backlog.
+- **Skill `revisar-codigo` e agente `revisor-codigo`**: o fiscal do código, no mesmo modelo do fiscal de cards. O agente não tem terminal e só lê arquivos, a LSP e o Jira.
+  - O que ele confere:
+    - se cada critério Dado / Quando / Então da task tem código e teste;
+    - o padrão do projeto (`nestjs-padrao` no backend, `figma-para-codigo` no front);
+    - falhas e furos: `catch` que engole erro, `await` esquecido, corrida, transação;
+    - segurança, qualidade dos testes e regras de negócio.
+  - O que ele devolve: BLOQUEIA, AJUSTAR e SUGESTÃO, cada item com `arquivo:linha`, o cenário que quebra e a correção sugerida. Problema antigo fora do diff vira débito.
+  - Quando roda: a `executar-task` o chama no fechamento da task. A skill também revisa uma branch, um PR, um módulo ou o repositório inteiro, e chama a `security-review` quando a mudança é sensível.
 - **Skill `executar-task`**: o roteiro de uma task, do começo ao fim. Confere a branch, lê a task e os docs, move no Jira, implementa com teste antes, verifica, comenta na task e entrega a mensagem de commit.
 - **Skill `iniciar-projeto`**: prepara um projeto, novo ou existente. Pergunta as regras (Jira, quem commita, branches, testes, cuidados) e cria o `CLAUDE.md` do projeto, o log de decisões, as pendências técnicas e o `.claude/`.
 

@@ -18,6 +18,7 @@ Valem em todo projeto. Se o CLAUDE.md do projeto disser outra coisa, vale o do p
 - Bug, teste falhando ou comportamento estranho: ache a causa raiz antes de propor a correção (skill `systematic-debugging`).
 - Tela de frontend: siga a skill `telas-figma`. A Ficha e o prompt do Figma vêm antes, e o desenho aprovado antes do código.
 - Implementar a partir de um desenho do Figma, em web ou mobile: siga a skill `figma-para-codigo`.
+- Revisar código (a branch de uma task, um PR, um módulo): siga a skill `revisar-codigo`. No fechamento de uma task, a revisão é obrigatória.
 
 ## Antes de dizer que terminou
 

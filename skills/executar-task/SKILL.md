@@ -1,6 +1,6 @@
 ---
 name: executar-task
-description: Roteiro para trabalhar uma task do Jira do começo ao fim. Confere a branch, lê a task e os docs, move para Em Andamento, implementa com teste antes, verifica, comenta no Jira, move para Testes e entrega a mensagem de commit. Use quando o usuário pedir para começar, pegar, implementar, continuar ou fechar uma task (ex.: "vamos fazer a MS-61").
+description: Roteiro para trabalhar uma task do Jira do começo ao fim. Confere a branch, lê a task e os docs, move para Em Andamento, implementa com teste antes, verifica, passa pela revisão de código independente, comenta no Jira, move para Testes e entrega a mensagem de commit. Use quando o usuário pedir para começar, pegar, implementar, continuar ou fechar uma task (ex.: "vamos fazer a MS-61").
 ---
 
 # Executar uma task
@@ -30,16 +30,23 @@ A task já nasce com as decisões tomadas (skill `jira-task`). Aqui é seguir o 
 ## Para fechar
 
 1. **Verifique** (skill `verification-before-completion`): lint, build, testes e o que os critérios de aceite pedem (Swagger, migration com run/revert, validação ponta a ponta). Confira cada critério de aceite e guarde a prova.
-2. **Comente na task** com `addCommentToJiraIssue`:
+2. **Revisão de código** (skill `revisar-codigo`), com a task e o diff da branch:
+   - **BLOQUEIA:** corrija com teste antes e peça nova revisão. São no máximo 2 rodadas; o que sobrar vai para o usuário decidir.
+   - **AJUSTAR:** corrija o que está no escopo. O resto vira débito (passo 5).
+   - **"Fora do diff":** vira débito (passo 5).
+   - **Segurança:** mudança em autenticação, permissões, pagamento, upload ou segredos também passa pela skill `security-review`.
+   - **Depois de qualquer correção**, verifique de novo (passo 1).
+3. **Comente na task** com `addCommentToJiraIssue`:
    ```markdown
    **O que mudou:** <arquivos e comportamento>
    **Decisões:** <as tomadas durante a task, com data, ou "nenhuma além das da abertura">
    **Como validei:** <comandos e resultado: N testes passando, lint e build ok...>
+   **Revisão de código:** <veredito do revisor e o que foi corrigido>
    **Limites:** <o que ficou de fora e a task criada para isso>
    ```
-3. **Mova para Testes.** Quem move para Concluído é o usuário.
-4. **O que você anotou fora do escopo** vira task com a skill `jira-task`, com as decisões perguntadas antes, como sempre. Se o projeto tem `docs/PENDENCIAS_TECNICAS.md`, registre lá também.
-5. **Commit.** Mensagem em Conventional Commits, em inglês, com a task no escopo:
+4. **Mova para Testes.** Quem move para Concluído é o usuário.
+5. **O que você anotou fora do escopo** vira task com a skill `jira-task`, com as decisões perguntadas antes, como sempre. Isso inclui os débitos da revisão de código. Se o projeto tem `docs/PENDENCIAS_TECNICAS.md`, registre lá também.
+6. **Commit.** Mensagem em Conventional Commits, em inglês, com a task no escopo:
    ```
    feat(MS-61): add forgot-password and reset-password screens
 
