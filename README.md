@@ -37,7 +37,11 @@ claude-config/
 
 - **`CLAUDE.md`**: regras curtas que valem sempre, em qualquer projeto.
 - **Skill `nestjs-padrao`**: o Claude carrega quando a tarefa é NestJS/TypeScript. Também dá para chamar direto com `/nestjs-padrao`.
-- **Skill `jira-task`**: o Claude carrega para abrir task, bug ou epic no Jira. Também dá para chamar direto com `/jira-task`. Toda decisão e todo débito técnico são definidos antes de criar o card.
+- **Skill `jira-task`**: o Claude carrega para abrir task, bug ou epic no Jira. Também dá para chamar direto com `/jira-task`. Toda decisão e todo débito técnico são definidos antes de criar o card. Ela usa quatro modelos de mercado:
+  - **Pré-mortem:** antes de escrever, pergunta "por que esta task daria errado?" para achar as decisões e os riscos escondidos.
+  - **ADR:** decisão grande ganha um registro próprio em `docs/decisoes/`.
+  - **Critérios de aceite em Dado / Quando / Então**, com valores concretos. Cada critério vira um teste.
+  - **Definition of Ready:** o portão final. O card só é criado se passar em todos os itens.
 - **Skill `executar-task`**: o roteiro de uma task, do começo ao fim. Confere a branch, lê a task e os docs, move no Jira, implementa com teste antes, verifica, comenta na task e entrega a mensagem de commit.
 - **Skill `iniciar-projeto`**: prepara um projeto, novo ou existente. Pergunta as regras (Jira, quem commita, branches, testes, cuidados) e cria o `CLAUDE.md` do projeto, o log de decisões, as pendências técnicas e o `.claude/`.
 

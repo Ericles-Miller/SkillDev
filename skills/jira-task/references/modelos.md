@@ -2,7 +2,10 @@
 
 Os modelos foram tirados dos projetos MS (monitoramento de usina) e PC (calhas). Todos estão em markdown, porque o `createJiraIssue` recebe `contentFormat: "markdown"`.
 
-O que mudou em relação a esses projetos: lá, algumas tasks nasciam com "Decisões em aberto" (MS-65, MS-86). Agora essa seção não existe. A decisão é tomada antes de abrir a task e entra em "Decisões", com a data.
+O que mudou em relação a esses projetos:
+- **Sem "Decisões em aberto".** Lá, algumas tasks nasciam com essa seção (MS-65, MS-86). Agora a decisão é tomada antes de abrir a task e entra em "Decisões", com a data. A decisão grande também ganha um ADR.
+- **Seção "Riscos".** Traz o que o pré-mortem achou, cada risco com a sua mitigação.
+- **Critérios de aceite em Dado / Quando / Então**, com valores concretos. Cada critério vira um teste.
 
 ## Tarefa
 
@@ -23,16 +26,21 @@ O que mudou em relação a esses projetos: lá, algumas tasks nasciam com "Decis
 **Decisões** (tomadas em DD/MM/AAAA)
 
 1. **<tema>:** <o que foi decidido>. <o porquê, se não for óbvio>
-2. <...>
+2. **<tema>:** <decisão grande, em uma linha>. Ver ADR `docs/decisoes/NNNN-<titulo>.md`.
 
 **Débitos técnicos**
 
 * <débito> → resolvido nesta task | virou MS-XX | aceito: <motivo> (DD/MM/AAAA)
 
+**Riscos** (do pré-mortem)
+
+* <o que pode dar errado> → <mitigação, que também está nos critérios de aceite>
+
 **Critérios de aceite**
 
-- [ ] <comportamento verificável, com o caso de erro>
-- [ ] <regra de permissão: não vaza dado de outro usuário>
+- [ ] **Dado** <situação inicial>, **quando** <ação>, **então** <resultado concreto: status, mensagem, dado gravado>.
+- [ ] **Dado** <situação de erro>, **quando** <ação>, **então** <resposta de erro concreta>.
+- [ ] **Dado** um usuário sem permissão, **quando** <ação>, **então** <404 ou 403, e nada muda>.
 - [ ] Testes unitários (mínimo de 70% por método), lint e build passando.
 - [ ] <conforme o caso: Swagger, migration com run/revert, validação ponta a ponta com backend e banco reais>
 
@@ -40,7 +48,7 @@ O que mudou em relação a esses projetos: lá, algumas tasks nasciam com "Decis
 **Ref:** `docs/<arquivo>.md` (seção "<nome>")
 ```
 
-Quando não houver débito, escreva "Nenhum encontrado." A seção nunca some, para ficar claro que ela foi verificada.
+Quando não houver débito, escreva "Nenhum encontrado." Quando o pré-mortem não achar risco, escreva "Nenhum encontrado no pré-mortem." As seções nunca somem, para ficar claro que foram verificadas.
 
 ## Bug
 
@@ -70,8 +78,8 @@ Formato da MS-99 e da PC-70.
 
 **Critérios de aceite**
 
-- [ ] A reprodução acima não acontece mais.
-- [ ] Teste que falhava antes da correção e passa depois.
+- [ ] **Dado** <a situação da reprodução>, **quando** <a ação>, **então** <o comportamento correto, concreto>.
+- [ ] Teste de regressão que falhava antes da correção e passa depois.
 - [ ] Lint, build e testes passando.
 ```
 
@@ -96,7 +104,38 @@ Formato da MS-32. Serve para registrar uma decisão grande que gera várias task
 
 **Impacto:** <o que muda no projeto>
 
-Plano completo em `docs/<arquivo>.md`. A implementação foi quebrada nas tasks MS-XX a MS-YY, nesta mesma Epic.
+Registro completo no ADR `docs/decisoes/NNNN-<titulo>.md`. A implementação foi quebrada nas tasks MS-XX a MS-YY, nesta mesma Epic.
+```
+
+## ADR (Architecture Decision Record)
+
+Arquivo `docs/decisoes/NNNN-<titulo-em-kebab>.md`, no repositório do projeto. O NNNN segue a numeração dos ADRs que já existem (`0001`, `0002`...).
+
+```markdown
+# NNNN. <Título da decisão, em uma frase>
+
+- **Status:** Proposto | Aceito em DD/MM/AAAA | Substituído pelo NNNN
+- **Task:** <CHAVE>-XX
+- **Substitui:** <NNNN, se for o caso>
+
+## Contexto
+
+<O problema e o que está em jogo: requisito, restrição, prazo, custo, o que os docs diziam. Por que a decisão precisou ser tomada agora.>
+
+## Opções
+
+1. **<Opção A>:** <como seria>. A favor: <...>. Contra: <...>.
+2. **<Opção B>:** <como seria>. A favor: <...>. Contra: <...>.
+
+## Decisão
+
+<A opção escolhida e o motivo principal.>
+
+## Consequências
+
+- <O que fica mais fácil.>
+- <O que fica mais difícil, ou passa a ser obrigatório para as próximas tasks.>
+- <A premissa que, se mudar, obriga a rever esta decisão.>
 ```
 
 ## Epic
@@ -111,7 +150,7 @@ Formato da MS-1 e da PC-87. Um parágrafo:
 
 ## Exemplo: a MS-65 reescrita no padrão novo
 
-A MS-65 original foi aberta com cinco "Decisões em aberto". No padrão novo, elas teriam sido perguntadas antes, e o card nasceria assim (as respostas são ilustrativas):
+A MS-65 original foi aberta com cinco "Decisões em aberto". No padrão novo, elas teriam sido perguntadas antes, o pré-mortem teria achado os riscos, e o card nasceria assim (as respostas são ilustrativas):
 
 ```markdown
 **Contexto:** quarta task do foco em inversores. O cliente pediu alarmes classificados (A1 crítico, A2 importante, A3 informativo), no espírito da ISA-18.2. Entra na Fase 1, decidido em 24/09/2026 (`docs/arquitetura/08-inversores-fase1.md`).
@@ -140,11 +179,19 @@ A MS-65 original foi aberta com cinco "Decisões em aberto". No padrão novo, el
 
 * Não há falha real no histórico (561 leituras, todas online) → aceito: a validação usa leituras simuladas (24/09/2026).
 
+**Riscos** (do pré-mortem)
+
+* Uma leitura que oscila abre e fecha o alarme a cada coleta, enchendo a caixa de e-mail → histerese de 2 leituras (decisão 2) e um e-mail por alarme (decisão 3).
+* O SMTP fora do ar trava a coleta → o envio roda fora da coleta, e a falha só vira log.
+* Um usuário vê alarme da usina de outro → o filtro pelo dono vai na própria consulta, com 404.
+
 **Critérios de aceite**
 
-- [ ] O alarme abre e fecha conforme as regras, com histerese, testado com sequências simuladas.
-- [ ] Ativos e histórico com filtros, sem vazar alarme de usina de outro usuário.
-- [ ] O e-mail chega no Mailpit uma vez por alarme. Uma falha de SMTP não afeta a coleta.
+- [ ] **Dado** um inversor em falha em 2 leituras seguidas, **quando** a coleta roda, **então** abre um alarme A2 com o início na primeira dessas leituras.
+- [ ] **Dado** um alarme A2 aberto, **quando** chegam 2 leituras normais seguidas, **então** o alarme fecha com o fim na primeira leitura normal.
+- [ ] **Dado** um inversor que alterna falha e normal a cada leitura, **quando** a coleta roda 6 vezes, **então** nenhum alarme abre.
+- [ ] **Dado** o SMTP fora do ar, **quando** um alarme A1 abre, **então** a coleta segue normal e o erro aparece no log.
+- [ ] **Dado** um usuário sem acesso à usina X, **quando** chama `GET /alarms?plantId=X`, **então** recebe 404.
 - [ ] Migration com run/revert, testes unitários (mínimo de 70% por método), Swagger, lint e build passando.
 
 **Depende de:** MS-64. **Bloqueia:** MS-68.

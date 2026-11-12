@@ -22,6 +22,7 @@ Cada projeto tem as suas regras: quem pode commitar, qual o board do Jira, onde 
 3. **Copie os modelos** de [templates/](templates/) e preencha. Eles têm outro nome no template para o Claude não carregá-los como configuração de verdade:
    - `CLAUDE.template.md` → `CLAUDE.md` na raiz do projeto. Apague as linhas que não valem, como a opção de git que não foi escolhida.
    - `docs/DECISOES.md` e `docs/PENDENCIAS_TECNICAS.md`. Registre as respostas do passo 2 como as primeiras decisões.
+   - `docs/decisoes/`: a pasta dos ADRs. Ponha nela um `0000-modelo.md` com o modelo de ADR da skill `jira-task` (seção "ADR" do `~/.claude/skills/jira-task/references/modelos.md`).
    - `settings.json` → `.claude/settings.json`: libera sem perguntar `yarn lint`, `yarn build`, `yarn test` e os comandos de git que só leem.
 4. **Regras do hookify:** `mkdir -p .claude && cp ~/.claude/hookify/*.local.md .claude/`.
    - Se você não pode commitar, mude `enabled: false` para `enabled: true` em `.claude/hookify.block-git-commit.local.md`.

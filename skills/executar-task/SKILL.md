@@ -13,7 +13,7 @@ A task já nasce com as decisões tomadas (skill `jira-task`). Aqui é seguir o 
 2. **Leia as regras do projeto:** o `CLAUDE.md` do projeto e os docs que ele aponta. Elas valem mais que esta skill. Por exemplo, é o projeto que diz se você pode commitar.
 3. **Leia a task inteira:** descrição, comentários, links e as tasks de que ela depende. Se uma dependência não terminou, avise antes de começar.
 4. **Confira com os docs e o código.** Se a task contradiz um dos dois, pare e mostre a contradição. Os docs vencem a task.
-5. **Se faltar uma decisão**, a task devia ter trazido. Pergunte com as opções e a sua recomendação, registre a resposta como comentário na task, com a data, e só então continue. Nunca decida sozinho.
+5. **Se faltar uma decisão**, a task devia ter trazido. Pergunte com as opções e a sua recomendação, registre a resposta como comentário na task, com a data, e só então continue. Se a decisão for grande, ela também vira um ADR (skill `jira-task`). Nunca decida sozinho.
 6. **Confira a branch** com `git branch --show-current`. O nome segue o projeto; o padrão é a chave da task (`MS-61`). Se não for a branch da task:
    - Se o projeto deixa você mexer no git, crie a partir de `develop`: `git switch -c MS-61 develop`.
    - Senão, peça ao usuário para criar ou trocar.
@@ -21,7 +21,7 @@ A task já nasce com as decisões tomadas (skill `jira-task`). Aqui é seguir o 
 
 ## Durante
 
-- Faça o que está no escopo e nos critérios de aceite: nem mais, nem menos.
+- Faça o que está no escopo e nos critérios de aceite: nem mais, nem menos. Cada critério Dado / Quando / Então vira um teste, escrito antes do código.
 - Achou algo fora do escopo (bug, débito, melhoria)? Anote para o fim; não resolva junto.
 - Código no padrão (skill `nestjs-padrao` no backend), com o teste antes (skill `test-driven-development`). Bug no caminho: skill `systematic-debugging`.
 - Tela: só a partir do desenho aprovado, com o `node-id` registrado na task. Siga a skill `figma-para-codigo`.

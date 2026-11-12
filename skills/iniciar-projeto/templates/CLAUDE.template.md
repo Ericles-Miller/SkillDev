@@ -12,7 +12,7 @@
 ## Fonte de verdade
 
 - Os docs em `docs/` vencem a descrição da task e a memória de quem pediu. Se discordarem, pare e me avise.
-- Decisões: `docs/DECISOES.md`. Débitos e pendências: `docs/PENDENCIAS_TECNICAS.md`.
+- Decisões: `docs/DECISOES.md`, e as grandes em ADR na pasta `docs/decisoes/`. Débitos e pendências: `docs/PENDENCIAS_TECNICAS.md`.
 - Decisão que não está nos docs: pare e pergunte, dizendo que está fora do que foi documentado.
 
 ## Git
