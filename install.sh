@@ -29,6 +29,12 @@ for skill in "$REPO_DIR"/skills/*/; do
   link "skills/$name" "$CLAUDE_DIR/skills/$name"
 done
 
+echo "==> Agentes"
+for agent in "$REPO_DIR"/agents/*.md; do
+  name="$(basename "$agent")"
+  link "agents/$name" "$CLAUDE_DIR/agents/$name"
+done
+
 echo "==> Regras do hookify (copiadas para o .claude/ de cada projeto)"
 link hookify "$CLAUDE_DIR/hookify"
 

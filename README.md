@@ -11,6 +11,8 @@ claude-config/
 ├── CLAUDE.md                      → ~/.claude/CLAUDE.md (carregado em toda sessão)
 ├── install.sh                     cria os symlinks, instala os plugins e o language server
 ├── plugins.txt                    plugins do Claude Code instalados pelo install.sh
+├── agents/
+│   └── revisor-task.md            → ~/.claude/agents/ (revisor independente dos cards, só leitura)
 ├── scripts/verify-templates.sh    confere os templates do Nest num projeto descartável
 ├── hookify/                       → ~/.claude/hookify (regras a copiar para o .claude/ de cada projeto)
 │   └── test_rules.py              testa cada regra contra comandos e edições de exemplo
@@ -42,6 +44,10 @@ claude-config/
   - **ADR:** decisão grande ganha um registro próprio em `docs/decisoes/`.
   - **Critérios de aceite em Dado / Quando / Então**, com valores concretos. Cada critério vira um teste.
   - **Definition of Ready:** o portão final. O card só é criado se passar em todos os itens.
+- **Skill `revisar-task` e agente `revisor-task`**: o fiscal dos cards. O agente roda com contexto limpo, sem ver a conversa em que o card foi escrito, e só tem ferramentas de leitura.
+  - O que ele procura: decisão em aberto, regra de negócio quebrada (confere com os docs e o código), débito sem destino, critério que não dá para testar, dependência que não existe e task duplicada. Também faz um pré-mortem próprio.
+  - O que ele devolve: BLOQUEIA, AJUSTAR e SUGESTÃO, cada item com a evidência.
+  - Quando roda: a `jira-task` o chama sozinha antes de mostrar o rascunho. A skill também audita um card que já existe ou varre o backlog.
 - **Skill `executar-task`**: o roteiro de uma task, do começo ao fim. Confere a branch, lê a task e os docs, move no Jira, implementa com teste antes, verifica, comenta na task e entrega a mensagem de commit.
 - **Skill `iniciar-projeto`**: prepara um projeto, novo ou existente. Pergunta as regras (Jira, quem commita, branches, testes, cuidados) e cria o `CLAUDE.md` do projeto, o log de decisões, as pendências técnicas e o `.claude/`.
 

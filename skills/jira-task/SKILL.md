@@ -20,15 +20,19 @@ Os modelos de descrição, com exemplos, estão em [references/modelos.md](refer
 4. **Pergunte tudo** com `AskUserQuestion`. Cabem até 4 perguntas por chamada, então repita até acabar. Não crie nada enquanto houver pergunta sem resposta.
 5. **Decisão grande vira ADR** (veja "Decisão grande: ADR"). As pequenas ficam só no card.
 6. **Monte o rascunho** no modelo, com os critérios de aceite em Dado / Quando / Então (veja "Critérios de aceite").
-7. **Confira a Definition of Ready.** Se um item não passa, resolva antes ou não abra a task.
-8. **Mostre o rascunho** (título, tipo, Epic, prioridade, labels, descrição e o ADR, se houver) e espere o ok. Criar um card publica no Jira.
-9. **Crie** com `createJiraIssue`:
+7. **Peça a revisão independente** ao agente `revisor-task`, como descrito na skill `revisar-task`. Passe o rascunho, o caminho do projeto e a chave do projeto no Jira.
+   - **BLOQUEIA:** vira pergunta ao usuário. Corrija o rascunho e peça nova revisão. São no máximo 2 rodadas; o que sobrar vai para o usuário decidir.
+   - **AJUSTAR:** corrija.
+   - **SUGESTÃO:** mostre junto com o rascunho, e o usuário decide.
+8. **Confira a Definition of Ready.** Se um item não passa, resolva antes ou não abra a task.
+9. **Mostre o rascunho** (título, tipo, Epic, prioridade, labels, descrição, o ADR, se houver, e o veredito do revisor) e espere o ok. Criar um card publica no Jira.
+10. **Crie** com `createJiraIssue`:
    - `contentFormat: "markdown"`.
    - `parent` = a Epic.
    - `priority` e `labels` em `additional_fields`.
 
    Depois, ligue as dependências com `createIssueLink`, tipo `Blocks` (`inwardIssue` = quem bloqueia). Se houver ADR, grave o arquivo com status "Aceito" e a chave do card.
-10. **Registre.** Se o projeto tem um log de decisões ou um doc de pendências técnicas, atualize com a data e a chave da task. Devolva o link do card.
+11. **Registre.** Se o projeto tem um log de decisões ou um doc de pendências técnicas, atualize com a data e a chave da task. Devolva o link do card.
 
 ### Se uma decisão não pode ser tomada agora
 
@@ -117,6 +121,7 @@ A task só é criada, e só entra em *A fazer*, quando passa em todos os itens:
 - [ ] **Acessos e dados de teste** existem (credencial, conta de teste, ambiente). O que falta vira dependência.
 - [ ] **Tamanho:** cabe em até ~3 dias. Se passar, quebre em tasks na mesma Epic.
 - [ ] **Card completo:** prioridade no campo e na descrição, com o motivo; Epic, labels e fora do escopo preenchidos.
+- [ ] **Revisão:** o `revisor-task` não deixou nenhum BLOQUEIA sem resposta.
 - [ ] **Aprovação:** o usuário aprovou o rascunho.
 
 ## Prioridade
