@@ -6,7 +6,7 @@ set -euo pipefail
 command -v nest >/dev/null || { echo "Instale o nest CLI: yarn global add @nestjs/cli@11"; exit 1; }
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TEMPLATES="$REPO_DIR/skills/nestjs-padrao/templates"
+TEMPLATES="$REPO_DIR/plugins/nestjs/skills/nestjs-padrao/templates"
 WORK_DIR="$(mktemp -d)"
 # KEEP=1 mantém o projeto descartável para investigar uma falha.
 [ "${KEEP:-0}" = 1 ] || trap 'rm -rf "$WORK_DIR"' EXIT

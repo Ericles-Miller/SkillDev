@@ -1,0 +1,27 @@
+name: Templates do Nest
+
+# Só quando os templates ou o script mudam: o teste cria um projeto Nest do zero e leva alguns minutos.
+on:
+  pull_request:
+    paths: ['plugins/nestjs/**', 'scripts/verify-templates.sh']
+  push:
+    branches: [main]
+    paths: ['plugins/nestjs/**', 'scripts/verify-templates.sh']
+
+jobs:
+  templates:
+    name: Templates num projeto descartável
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Yarn
+        run: corepack enable
+      - name: Nest CLI
+        run: |
+          yarn global add @nestjs/cli@11.0.10
+          echo "$(yarn global bin)" >> "$GITHUB_PATH"
+      - name: Prettier, ESLint, build, testes e e2e dos templates
+        run: ./scripts/verify-templates.sh

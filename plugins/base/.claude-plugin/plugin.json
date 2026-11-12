@@ -1,0 +1,10 @@
+{
+  "name": "base",
+  "version": "1.0.0",
+  "description": "Vale em todo projeto: abrir task (jira-task), executar task, revisores independentes de card e de código, iniciar projeto, TDD, depuração sistemática, verificação antes de terminar e hooks (guarda de comandos, lint a cada edição e portão de encerramento).",
+  "author": {
+    "name": "Ericles Miller"
+  },
+  "repository": "https://github.com/Ericles-Miller/SkillDev",
+  "license": "MIT"
+}

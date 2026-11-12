@@ -14,6 +14,8 @@ Valem em todo projeto. Se o CLAUDE.md do projeto disser outra coisa, vale o do p
 - Só `yarn`, nunca `npm`.
 - Dinheiro sempre em centavos inteiros (`amountCents`), nunca float.
 - Se o projeto existente usa um padrão diferente, siga o do projeto e me avise da diferença, em vez de reescrever.
+- Antes de mexer, diga como vai provar que terminou. Diga também as suposições que fizer no caminho.
+- Apague só o código morto que a sua mudança criou. Código morto antigo vira débito, não limpeza de carona.
 - Feature ou correção: o teste vem antes do código (skill `test-driven-development`).
 - Bug, teste falhando ou comportamento estranho: ache a causa raiz antes de propor a correção (skill `systematic-debugging`).
 - Tela de frontend: siga a skill `telas-figma`. A Ficha e o prompt do Figma vêm antes, e o desenho aprovado antes do código.
@@ -38,3 +40,4 @@ Valem em todo projeto. Se o CLAUDE.md do projeto disser outra coisa, vale o do p
 
 - Conventional Commits em inglês, com a tarefa no escopo quando houver: `feat(REC-48): ...`.
 - Uma branch por tarefa. PR para `develop`, depois de `develop` para `main`.
+- Commit só depois da verificação completa (`verificar.py`, da skill `executar-task`). Nos projetos com `package.json` ou `pubspec.yaml`, o hook barra o commit se o código mudou depois dela.

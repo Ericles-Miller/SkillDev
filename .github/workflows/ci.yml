@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  plugins:
+    name: Validação e testes dos plugins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # O teste do portão de commit roda `yarn lint`, `yarn build` e `yarn test` num projeto falso.
+      - name: Yarn
+        run: corepack enable
+      - name: Marketplace, plugins, skills, agentes e hooks
+        run: python3 -I -B scripts/validar.py
+      - name: Testes dos hooks
+        run: python3 -I -B plugins/base/hooks/test_hooks.py
+      - name: Testes dos scripts
+        run: python3 -I -B plugins/base/scripts/test_scripts.py

@@ -1,0 +1,10 @@
+{
+  "name": "nestjs",
+  "version": "1.0.0",
+  "description": "Padrão NestJS/TypeScript: estrutura por feature, nomes, entidade rica, try/catch com exceções do Nest, Swagger, auth, paginação, ESLint, Prettier, tsconfig e templates de projeto.",
+  "author": {
+    "name": "Ericles Miller"
+  },
+  "repository": "https://github.com/Ericles-Miller/SkillDev",
+  "license": "MIT"
+}

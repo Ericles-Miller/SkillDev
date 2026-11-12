@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-# Liga o ~/.claude a este repositório por symlink. Pode rodar de novo sem problema.
+# Liga o ~/.claude a este repositório: o CLAUDE.md global e os plugins do marketplace skilldev.
+# Pode rodar de novo sem problema.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 # O backup fica fora de ~/.claude/skills: uma cópia antiga lá dentro seria lida como uma skill a mais.
 BACKUP_DIR="$CLAUDE_DIR/backup-claude-config-$(date +%Y%m%d%H%M%S)"
+# Valem em todo projeto. O plugin `front` é ligado só nos projetos com telas (skill iniciar-projeto).
+USER_PLUGINS=(base nestjs)
 
 # Faz backup do que já existe (se não for symlink) e cria o link para o repo.
 link() {
@@ -23,22 +26,29 @@ link() {
 echo "==> CLAUDE.md global"
 link CLAUDE.md "$CLAUDE_DIR/CLAUDE.md"
 
-echo "==> Skills"
-for skill in "$REPO_DIR"/skills/*/; do
-  name="$(basename "$skill")"
-  link "skills/$name" "$CLAUDE_DIR/skills/$name"
+echo "==> Limpeza do formato antigo"
+# Antes dos plugins, cada skill e cada agente tinha um link próprio em ~/.claude. Se ficassem, cada skill
+# apareceria duas vezes (com e sem o prefixo do plugin). As regras do hookify viraram hooks do plugin base.
+for old in "$CLAUDE_DIR"/skills/* "$CLAUDE_DIR"/agents/* "$CLAUDE_DIR"/hookify; do
+  [ -L "$old" ] || continue
+  case "$(readlink "$old")" in
+    "$REPO_DIR"/skills/* | "$REPO_DIR"/agents/* | "$REPO_DIR"/hookify) rm "$old" && echo "    removido: $old" ;;
+  esac
 done
 
-echo "==> Agentes"
-for agent in "$REPO_DIR"/agents/*.md; do
-  name="$(basename "$agent")"
-  link "agents/$name" "$CLAUDE_DIR/agents/$name"
+echo "==> Marketplace skilldev (lido direto desta pasta: editar aqui vale na próxima sessão)"
+current="$(claude plugin marketplace list --json | jq -r '.[] | select(.name == "skilldev") | .path // .repo // empty')"
+if [ "$current" != "$REPO_DIR" ]; then
+  [ -n "$current" ] && claude plugin marketplace remove skilldev
+  claude plugin marketplace add "$REPO_DIR"
+else
+  echo "    já aponta para $REPO_DIR"
+fi
+for plugin in "${USER_PLUGINS[@]}"; do
+  claude plugin install "$plugin@skilldev"
 done
 
-echo "==> Regras do hookify (copiadas para o .claude/ de cada projeto)"
-link hookify "$CLAUDE_DIR/hookify"
-
-echo "==> Plugins"
+echo "==> Plugins de terceiros"
 # Instalar um plugin que já está instalado não muda nada.
 while read -r plugin; do
   [ -n "$plugin" ] && claude plugin install "$plugin"

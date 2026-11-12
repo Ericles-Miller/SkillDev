@@ -1,0 +1,26 @@
+{
+  "name": "skilldev",
+  "owner": {
+    "name": "Ericles Miller"
+  },
+  "metadata": {
+    "description": "Meu padrão de desenvolvimento com o Claude Code: fluxo de tasks no Jira, revisores independentes de card e de código, padrão NestJS e método de telas com o Figma."
+  },
+  "plugins": [
+    {
+      "name": "base",
+      "source": "./plugins/base",
+      "description": "Vale em todo projeto: abrir task (jira-task), executar task, revisores de card e de código, iniciar projeto, TDD, depuração sistemática e verificação antes de terminar."
+    },
+    {
+      "name": "nestjs",
+      "source": "./plugins/nestjs",
+      "description": "Padrão NestJS/TypeScript: estrutura, nomes, entidade rica, try/catch com exceções do Nest, Swagger, auth, paginação e templates de projeto."
+    },
+    {
+      "name": "front",
+      "source": "./plugins/front",
+      "description": "Telas: método do Figma First Draft (telas-figma) e implementação a partir do desenho em web e Flutter (figma-para-codigo)."
+    }
+  ]
+}

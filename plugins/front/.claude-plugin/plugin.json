@@ -1,0 +1,10 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "description": "Telas: método do Figma First Draft (telas-figma) e implementação a partir do desenho do Figma em web (Next.js) e mobile (Flutter) (figma-para-codigo).",
+  "author": {
+    "name": "Ericles Miller"
+  },
+  "repository": "https://github.com/Ericles-Miller/SkillDev",
+  "license": "MIT"
+}
