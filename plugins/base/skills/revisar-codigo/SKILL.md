@@ -34,4 +34,6 @@ O revisor é o agente `base:revisor-codigo`. Ele roda com o contexto limpo, sem 
 
 ## Se o agente não aparecer
 
-Se `base:revisor-codigo` não estiver entre os tipos de agente, o plugin `base` do marketplace `skilldev` não está instalado nesta máquina. Veja a seção "Instalar" do README do SkillDev e abra uma sessão nova.
+No chat do app do Claude (web ou desktop), agentes não rodam: eles só existem no Cowork e no Claude Code. Nesse caso, revise o código você mesmo, com a régua da skill `regua-revisao` e o padrão do projeto (`nestjs-padrao` no backend, `figma-para-codigo` no front), no mesmo formato de relatório, e comece a resposta avisando: "Revisão feita nesta conversa, não por um revisor independente. Para a revisão independente, rode no Cowork ou no Claude Code."
+
+No Cowork ou no Claude Code, a falta do agente quer dizer que o plugin `base` do marketplace `skilldev` não está instalado. Veja a seção "Instalar" do README do SkillDev e abra uma sessão nova.

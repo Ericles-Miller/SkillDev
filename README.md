@@ -137,6 +137,25 @@ claude plugin install front@skilldev --scope project
 
 O `--scope project` grava o plugin no `.claude/settings.json` do projeto (`enabledPlugins`), que vai para o git. Quem abrir o projeto vê que ele precisa do plugin `front`.
 
+**No app do Claude (chat e Cowork):**
+
+1. No app (desktop ou web), abra **Customize** na barra lateral e vá na aba **Plugins**. Para o Cowork, abra antes a aba Cowork.
+2. Clique em **Add** → **Add marketplace** → **Add from a repository** e digite `Ericles-Miller/SkillDev`.
+3. Instale os plugins `base` e `nestjs`, e o `front` se for trabalhar com telas.
+4. Ligue **Sync automatically** no marketplace, para receber o que for enviado ao GitHub. Sem isso, use **Check for updates**.
+
+O app lê o GitHub, não esta pasta: mudança feita aqui só chega lá depois do push. Os plugins ficam salvos na conta e aparecem no chat, no Cowork e no Claude Code.
+
+O que funciona em cada lugar:
+
+| | Chat | Cowork | Claude Code |
+|---|---|---|---|
+| Skills | sim | sim | sim |
+| Agentes (revisores, planejador) | não | sim | sim |
+| Hooks | não | sim | sim |
+
+No chat, as skills que chamam um agente (`revisar-task`, `revisar-codigo`, `planejar-task` e a revisão da `jira-task`) fazem o trabalho na própria conversa e avisam que a revisão não foi independente.
+
 ## Hooks
 
 O plugin `base` traz três hooks, que valem em todo projeto onde ele está ligado. Quando um hook bloqueia, o Claude lê o motivo e se corrige sozinho.

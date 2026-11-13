@@ -35,4 +35,6 @@ O revisor é o agente `base:revisor-task`. Ele roda com o contexto limpo, sem ve
 
 ## Se o agente não aparecer
 
-Se `base:revisor-task` não estiver entre os tipos de agente, o plugin `base` do marketplace `skilldev` não está instalado nesta máquina. Veja a seção "Instalar" do README do SkillDev e abra uma sessão nova.
+No chat do app do Claude (web ou desktop), agentes não rodam: eles só existem no Cowork e no Claude Code. Nesse caso, revise o card você mesmo, com a régua da skill `regua-revisao` e a Definition of Ready da skill `jira-task`, no mesmo formato de relatório, e comece a resposta avisando: "Revisão feita nesta conversa, não por um revisor independente. Para a revisão independente, rode no Cowork ou no Claude Code."
+
+No Cowork ou no Claude Code, a falta do agente quer dizer que o plugin `base` do marketplace `skilldev` não está instalado. Veja a seção "Instalar" do README do SkillDev e abra uma sessão nova.

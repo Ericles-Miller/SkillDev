@@ -20,3 +20,9 @@ O plano separa o "como" do "fazer". Você revisa o plano, que é barato, antes d
 
 - Um plano por task. Plano novo substitui o antigo: o comentário mais recente com o marcador é o que vale.
 - Se o usuário pedir mudança no plano, chame o agente de novo com o pedido; não edite o plano à mão para não perder a ancoragem no código.
+
+## Se o agente não aparecer
+
+No chat do app do Claude (web ou desktop), agentes não rodam: eles só existem no Cowork e no Claude Code. Nesse caso, escreva o plano você mesmo, lendo o código, com as seções Critérios → mudanças, Passos, Arquivos (com o arquivo a espelhar), Plano de teste, A provar, Riscos e Perguntas em aberto, e comece a resposta avisando: "Plano feito nesta conversa, não pelo agente planejador."
+
+No Cowork ou no Claude Code, a falta do agente quer dizer que o plugin `base` do marketplace `skilldev` não está instalado. Veja a seção "Instalar" do README do SkillDev e abra uma sessão nova.
